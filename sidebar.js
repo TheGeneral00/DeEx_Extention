@@ -13,16 +13,62 @@ document.getElementById("encodeBtn").addEventListener("click", () => {
 });
 
 document.getElementById("decodeBtn").addEventListener("click", () => {
-        const input = document.getElementById("inputField");
-        const output = document.getElementById("output");
-        const value = input.value.trim();
+        const input = document.getElementById("inputField").value.trim();
+        
+        const outputs = {
+                base64: document.getElementById("out_base64"),
+                url: document.getElementById("out_url"),
+                qp: document.getElementById("out_qp"),
+                hex: document.getElementById("out_hex"),
+                html: document.getElementById("out_html"),
+        };
 
+        Object.value(outputs).forEach(el => el.textContent = "");
+
+        //base64
+        try {
+                outputs.base64.textContent = atob(input);
+        } catch {
+                outputs.base64.textContent = "Invalid Base64";
+        }
+
+        //URL decode 
+        try {
+                outputs.url.textContent = decodeURIComponent(input);
+        } catch {
+                outputs.url.textContent = "Invalid URL encoding";
+        }
+
+        //Quoted-Printable 
+        try {
+                outputs.qp.textContent = input.replace(/=([0-9A-Fa-f]{2})/g, (_, hex) => String.fromCharCode(parseInt(hex, 16)));
+        } catch {
+                outputs.qp.textContent = "Invalid quoted-printable";        
+        }
+
+        //Hex pairs
+        try {
+                outputs.hex.textContent = input.replace(/([0-9A-Fa-f]{2})/g, (_, hex) => String.fromCharCode(parseInt(hex, 16)));
+        } catch {
+                outputs.hex.textContent = "Invalid hex pairs";
+        }
+
+        //HTML entities
+        try {
+                outputs.html.textContent = input.replace(/([0-9A-Fa-f]+);/g, (_, hex) => String.fromCharCode(parseInt(hex, 16))).replace(/&#([0-9]+);/g,
+                        (_, dec) => String.fromCharCode(parseInt(dec, 10)));
+        } catch {
+                outputs.html.textContent = "Invalid html entities";
+        }
+/*
+Commented out as it is under developement. For now only a general solution of decoding all common encodings.
         // Regex patterns
         const base64Regex = /^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$/;
         const qpRegex = /^(?:[^\r\n=]|=(?:[0-9A-Fa-f]{2}))*$/;
         const urlEncodedRegex = /%(?:[0-9A-Fa-f]{2})/;
         const hexRegex = /^(?:[0-9A-Fa-f]{2}\s?)+$/;
         const utf7Regex = /^\+[A-Za-z0-9/]+-$/;
+        const htmlEscRegex = /&#[0-9]{2,3};/
 
         function detectEncoding(str) {
           str = str.trim();
@@ -76,14 +122,16 @@ document.getElementById("decodeBtn").addEventListener("click", () => {
 
         const result = decodeRecursive(value);
         output.textContent = result;
+*/
+        
 });
 
 document.getElementById("extendBtn").addEventListener("click", async () => {
         const url = input.value.trim();
 
         if(!url.startsWith("http")) {
-                output.textContent = "Invalid URL.";
-                return;
+                url = "http://www." + url
+                
         }
 
         try{
