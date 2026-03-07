@@ -3,15 +3,15 @@
   "name": "En/Decoder and Extender",
   "version": "0.1",
   "description": "PoC encoder, decoder and URL extender.",
-  "permissions": ["sidePanel"],
-  "host_permissions": ["http://*/*", "https//*/*"],
+  "permissions": ["sidePanel", "webRequest"],
+  "host_permissions": ["http://*/*", "https://*/*"],
   "background": {
-    "service_worker": "background.js"
+    "service_worker": "background.mjs"
   },
   "action": {
     "default_title": "Open Decoder Sidebar"
   },
   "side_panel": {
-    "default_path": "sidebar.html"
+    "default_path": "/sidebar/sidebar.html"
   }
 }

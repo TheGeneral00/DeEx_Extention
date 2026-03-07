@@ -11,7 +11,6 @@ document.addEventListener("DOMContentLoaded", () => {
         };
 
         const input = document.getElementById("input");
-        var enableTrace = false; 
 
         const outputs = {
                 base64: document.getElementById("out_base64"),
@@ -59,47 +58,84 @@ document.addEventListener("DOMContentLoaded", () => {
         });
 
         // Extend button
+        // Extend button handler
         document.getElementById("extendBtn").addEventListener("click", async () => {
-                enableTrace = document.getElementById("enableTrace").checked;
-                let url = input.value.trim();
+                const enableTrace = document.getElementById("enableTrace").checked;
+                const urlInput = document.getElementById("input");
+                const maxInput = document.getElementById("maxRedirects");
+                    
+                let url = urlInput.value.trim();
                 if (!url) return;
-
+                    
+                // Normalize URL protocol
                 if (!/^https?:\/\//i.test(url)) {
-                        url = "http://" + url;
+                    url = "http://" + url;
                 }
 
-                if (enableTrace){
-                        trace, final = traceExtension;
-                        outputs.url.textContent = final;
-                        outputs.trace.textContent = trace;
-                try {
-                        const response = await fetch(url, {
-                        method: "GET",
-                        redirect: "follow",
-                        credentials: "omit",
-                        });
-                        outputs.url.textContent = response.url;
-                } catch (err) {
-                        outputs.url.textContent = "Extension failed with error: " + err;
+                // 1. Always perform the standard extend operation
+                const extendResponse = await extendURL(url);
+                outputs.url.textContent = extendResponse ? extendResponse.url : "Failed to fetch URL";
+
+                // 2. Conditionally perform the trace
+                if (enableTrace) {
+                    const maxRedirects = maxInput ? parseInt(maxInput.value.trim(), 10) : 10;
+                        
+                    outputs.trace.textContent = "Tracing...";
+                    const traceResult = await runTrace(url, maxRedirects);
+                    console.log(traceResult); 
+                    if (traceResult.error) {
+                        outputs.trace.textContent = "Error: " + traceResult.error;
+                    } else {
+                        outputs.trace.textContent = printRedirectChain(traceResult.chain);
+                    }
+                } else {
+                    outputs.trace.textContent = ""; // Clear trace if disabled
                 }
         });
 
+        // Sidebar.js
+async function runTrace(url, maxRedirects) {
+    try {
+        // Get the current tab ID so the background knows what to listen for
+        const tab = await chrome.tabs.getCurrent();
+        
+        const response = await chrome.runtime.sendMessage({
+            action: "traceURL",
+            url: url,
+            maxRedirects: maxRedirects,
+            tabId: tab.id // Pass the tabId!
+        });
+        
+        return response; 
+    } catch (err) {
+        return { error: err.message };
+    }
+}
+
+async function extendURL(url) {
+    try {
+        // Note: fetch() returns a Response object. 
+        // You likely want to return the final URL, not the object.
+        const response = await fetch(url, {
+            method: "GET",
+            redirect: "follow",
+            credentials: "omit"
+        });
+        return { url: response.url }; // Return the resolved URL
+    } catch (err) {
+        console.error("extendURL failed: ", err);
+        return null;
+    }
+}
+
+        function printRedirectChain(chain) {
+            if (!chain || chain.length === 0) return "No redirects found.";
+            
+            return chain.map((hop, i) => {
+                return `${i + 1}: [${hop.status}] ${hop.url} -> ${hop.redirectUrl}`;
+            }).join('\n');
+}
 });
 
 
-function traceExtension(url) {
-        
-}
 
-function extendURL(url) {
-        try {
-                const response = await fetch(url, {
-                        method: "GET",
-                        redirect: "follow",
-                        credentials: "omit",
-                });
-                outputs.url.textContent = reponse.url;
-        } catch {
-                outputs.url.textContent = "Extension failed with error: " + err;
-        }
-}

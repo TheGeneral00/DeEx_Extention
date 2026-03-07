@@ -13,6 +13,10 @@
         <div class="button">
                 <button id="decodeBtn">Decode</button>
                 <button id="extendBtn">Extend</button>
+                <input type="checkbox" id="enableTrace" name="enable Trace">
+                <label for="enableTrace">Trace</label><br>
+                <input type="number" id="maxRedirects" value="10" min="1" max="30">
+                <label for="maxRedirects">Max Redirects:</label>
         </div>
 
 <!--
@@ -23,6 +27,9 @@ Output will be refinded in later versions, to only output human readable decoded
         
         <h3>URL</h3>
         <pre id="out_url"></pre>
+
+        <h3>Trace</h3>
+        <pre id="out_trace"></pre>
         
         <h3>Quoted-Printable</h3>
         <pre id="out_qp"></pre>
