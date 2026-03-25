@@ -1,57 +1,48 @@
 <!DOCTYPE html>
 <html>
 <head>
-        <title>Decoder and Extender</title>
-        <meta charset="utf-8">
-        <link rel="stylesheet" href="sidebar.css">
+    <title>Decoder and Extender</title>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="sidebar.css">
 </head>
 <body>
-        <h2 class="text-center">Decoder and Extender</h2>
-        
-        <textarea id="input" placeholder="Paste encoded text or URL here"></textarea>
+    <h2 class="text-center">Decoder and Extender</h2>
 
-        <div class="button">
-                <button id="decodeBtn">Decode</button>
-                <button id="extendBtn">Extend</button>
-                <input type="checkbox" id="enableTrace" name="enable Trace">
-                <label for="enableTrace">Trace</label><br>
-                <input type="number" id="maxRedirects" value="10" min="1" max="30">
-                <label for="maxRedirects">Max Redirects:</label>
+    <!-- Tabs as register cards -->
+    <div class="tabs-css">
+
+        <!-- Hidden radio inputs -->
+        <input type="radio" name="tab" id="tab-decoder" checked>
+        <input type="radio" name="tab" id="tab-extender">
+
+        <!-- Tab buttons (top of card) -->
+        <div class="tab-buttons">
+            <label for="tab-decoder" class="tab-btn">Decoder</label>
+            <label for="tab-extender" class="tab-btn">Extender</label>
         </div>
 
-<!--
-Output will be refinded in later versions, to only output human readable decoded strings. For now all common encodings will be tried and the output for each will be given.
--->
-        <h3>Base64</h3>
-        <pre id="out_base64"></pre>
-        
-        <h3>URL</h3>
-        <pre id="out_url"></pre>
+        <!-- Decoder Card -->
+        <div class="tab-content" id="decoder">
+            <textarea id="inputDecoder" placeholder="Paste encoded text here"></textarea>
+            <div class="button">
+                <button id="decodeBtn">Decode</button>
+            </div>
+            <h3>Base64</h3><pre id="out_base64"></pre>
+            <h3>URL</h3><pre id="out_url"></pre>
+            <h3>Quoted-Printable</h3><pre id="out_qp"></pre>
+            <h3>Hex</h3><pre id="out_hex"></pre>
+            <h3>HTML Entities</h3><pre id="out_html"></pre>
+        </div>
 
-        <h3>Trace</h3>
-        <pre id="out_trace"></pre>
-        
-        <h3>Quoted-Printable</h3>
-        <pre id="out_qp"></pre>
-        
-        <h3>Hex</h3>
-        <pre id="out_hex"></pre>
-        
-        <h3>HTML Entities</h3>
-        <pre id="out_html"></pre>
+        <!-- Extender Card -->
+        <div class="tab-content" id="extender">
+            <textarea id="inputExtender" placeholder="Paste short URL here"></textarea>
+            <div class="button">
+                <button id="extendBtn">Extend</button>
+            </div>
+            <h3>Extended URL</h3><pre id="out_ext"></pre>
+        </div>
 
-<!--    Under further developement there will be auto detection of encodings and decoding of multilayer encodings. The trace of what decoding steps have been taken by the function will be displayed here.
-
-        <h3>Trace</h3>
-        <pre id="trace"></pre>
--->
-
-<!--
-Extended Shortner output will be displayed as the last retrieved full url. Additionally there will be an option to show the trace of redirects.
-
-        <h3>Extended URL<h3>
-        <pre id="out_ext"></pre>
--->
-        <script src="sidebar.js" defer></script>
+    </div>
 </body>
 </html>

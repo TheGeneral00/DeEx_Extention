@@ -10,8 +10,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 nbsp: "\u00A0",
         };
 
-        const input = document.getElementById("input");
-
         const outputs = {
                 base64: document.getElementById("out_base64"),
                 url: document.getElementById("out_url"),
@@ -23,7 +21,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         // Decode button
         document.getElementById("decodeBtn").addEventListener("click", () => {
-                const inputValue = input.value.trim();
+                const inputValue = document.getElementById("inputDecoder").value.trim();
 
                 Object.values(outputs).forEach(el => el.textContent = "");
 
@@ -57,85 +55,80 @@ document.addEventListener("DOMContentLoaded", () => {
                         outputs.html.textContent = "Invalid html entities"; }
         });
 
+
+        // Connect to background
+        const port = chrome.runtime.connect({ name: "sidebar" });
+
+        port.onMessage.addListener((msg) => {
+                if (msg.type === "REQUEST_COMPLETED") {
+                console.log("Received request data:", msg.payload);
+                renderRequest(msg.payload);
+                }
+        });
+
         // Extend button
         // Extend button handler
-        document.getElementById("extendBtn").addEventListener("click", async () => {
-                const enableTrace = document.getElementById("enableTrace").checked;
-                const urlInput = document.getElementById("input");
-                const maxInput = document.getElementById("maxRedirects");
-                    
-                let url = urlInput.value.trim();
+        document.getElementById("extendBtn").addEventListener("click", (e) => {
+                e.preventDefault();
+                const url = document.getElementById("input").value.trim();
                 if (!url) return;
                     
                 // Normalize URL protocol
-                if (!/^https?:\/\//i.test(url)) {
+                /*if (!/^https?:\/\//i.test(url)) {
                     url = "http://" + url;
-                }
+                }*/
 
+                port.postMessage({ type: "START_ANALYSIS" })
                 // 1. Always perform the standard extend operation
-                const extendResponse = await extendURL(url);
-                outputs.url.textContent = extendResponse ? extendResponse.url : "Failed to fetch URL";
-
-                // 2. Conditionally perform the trace
-                if (enableTrace) {
-                    const maxRedirects = maxInput ? parseInt(maxInput.value.trim(), 10) : 10;
-                        
-                    outputs.trace.textContent = "Tracing...";
-                    const traceResult = await runTrace(url, maxRedirects);
-                    console.log(traceResult); 
-                    if (traceResult.error) {
-                        outputs.trace.textContent = "Error: " + traceResult.error;
-                    } else {
-                        outputs.trace.textContent = printRedirectChain(traceResult.chain);
-                    }
-                } else {
-                    outputs.trace.textContent = ""; // Clear trace if disabled
-                }
+                //const extendResponse = await extendURL(url);
+                fetch(url).catch(console.err);
         });
 
-        // Sidebar.js
-async function runTrace(url, maxRedirects) {
-    try {
-        // Get the current tab ID so the background knows what to listen for
-        const tab = await chrome.tabs.getCurrent();
-        
-        const response = await chrome.runtime.sendMessage({
-            action: "traceURL",
-            url: url,
-            maxRedirects: maxRedirects,
-            tabId: tab.id // Pass the tabId!
-        });
-        
-        return response; 
-    } catch (err) {
-        return { error: err.message };
-    }
-}
+        function renderRequest(req) {
+                outputs.trace.innerHTML = ""; //clear previous
 
-async function extendURL(url) {
-    try {
-        // Note: fetch() returns a Response object. 
-        // You likely want to return the final URL, not the object.
-        const response = await fetch(url, {
-            method: "GET",
-            redirect: "follow",
-            credentials: "omit"
-        });
-        return { url: response.url }; // Return the resolved URL
-    } catch (err) {
-        console.error("extendURL failed: ", err);
-        return null;
-    }
-}
+                req.hops.forEach((hop, i) => {
+                        const div = document.createElement("div");
+                        div.textContent = `${i + 1}: ${hop.url} => status: ${hop.statusCode || hop.error || "pending"}`;
+                        container.appendChild(div);
+                })
+        }
 
-        function printRedirectChain(chain) {
-            if (!chain || chain.length === 0) return "No redirects found.";
-            
-            return chain.map((hop, i) => {
-                return `${i + 1}: [${hop.status}] ${hop.url} -> ${hop.redirectUrl}`;
-            }).join('\n');
-}
+        // Handle register card switching
+        const tabButtons = document.querySelectorAll('.tab-btn');
+        const tabContents = document.querySelectorAll('.tab-content');
+
+        tabButtons.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const target = btn.dataset.tab;
+
+                    // Remove active from all buttons and contents
+                    tabButtons.forEach(b => b.classList.remove('active'));
+                    tabContents.forEach(c => c.classList.remove('active'));
+
+                    // Activate clicked tab and corresponding content
+                    btn.classList.add('active');
+                    document.getElementById(target).classList.add('active');
+                });
+        });
+
+        // Handle textarea grow
+        function autoGrow(textarea) {
+            textarea.style.height = "auto";
+            textarea.style.height = textarea.scrollHeight + "px";
+        }
+
+        // Apply to all textareas
+        document.addEventListener("DOMContentLoaded", () => {
+                    const textareas = document.querySelectorAll("textarea");
+
+                    textareas.forEach(textarea => {
+                        // Initial sizing
+                        autoGrow(textarea);
+
+                        // Grow on input
+                        textarea.addEventListener("input", () => autoGrow(textarea));
+                    });
+        });
 });
-
-
 
