@@ -20,7 +20,7 @@ chrome.action.onClicked.addListener((tab) => {
 });
 
 // ----------------------------
-// Background Service Worker
+// Tracing 
 // ----------------------------
 class WebRequestManager {
   constructor() {
@@ -41,16 +41,17 @@ class WebRequestManager {
         this.ports.push(port);
 
         port.onMessage.addListener((msg) => {
-          if (msg.type === "START_ANALYSIS") {
-            try {
-              const url = new URL(msg.url);
-              this.activeTarget = url.hostname;
-              console.log("Tracking URL:", this.activeTarget);
-              this.trackedRequestIds.clear();
-            } catch (e) {
-              console.error("Invalid URL:", msg.url);
-            }
-          }
+                if (msg.type === "START_ANALYSIS") {
+                    try {
+                      console.log("Url: " + msg.url)
+                      const url = new URL(msg.url);
+                      this.activeTarget = url.hostname;
+                      console.log("Tracking URL:", this.activeTarget);
+                      this.trackedRequestIds.clear();
+                    } catch (e) {
+                      console.error("Invalid URL:", msg.url);
+                    }
+                }
         });
 
         port.onDisconnect.addListener(() => {

@@ -16,11 +16,13 @@ document.addEventListener("DOMContentLoaded", () => {
                 qp: document.getElementById("out_qp"),
                 hex: document.getElementById("out_hex"),
                 html: document.getElementById("out_html"),
-                trace: document.getElementById("out_trace"),
+                trace: document.getElementById("out_ext"),
+                full_trace: document.getElementById("out_ext_full"),
         };
 
         // Decode button
         document.getElementById("decodeBtn").addEventListener("click", () => {
+                console.log("Decoder button clicked!")
                 const inputValue = document.getElementById("inputDecoder").value.trim();
 
                 Object.values(outputs).forEach(el => el.textContent = "");
@@ -70,7 +72,8 @@ document.addEventListener("DOMContentLoaded", () => {
         // Extend button handler
         document.getElementById("extendBtn").addEventListener("click", (e) => {
                 e.preventDefault();
-                const url = document.getElementById("input").value.trim();
+                const url = document.getElementById("inputExtender").value.trim();
+                console.log("Extender input: " + url)
                 if (!url) return;
                     
                 // Normalize URL protocol
@@ -78,7 +81,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     url = "http://" + url;
                 }*/
 
-                port.postMessage({ type: "START_ANALYSIS" })
+                port.postMessage({ type: "START_ANALYSIS" , url: url})
                 // 1. Always perform the standard extend operation
                 //const extendResponse = await extendURL(url);
                 fetch(url).catch(console.err);
@@ -90,8 +93,17 @@ document.addEventListener("DOMContentLoaded", () => {
                 req.hops.forEach((hop, i) => {
                         const div = document.createElement("div");
                         div.textContent = `${i + 1}: ${hop.url} => status: ${hop.statusCode || hop.error || "pending"}`;
-                        container.appendChild(div);
+                        outputs.trace.appendChild(div);
                 })
+                outputs.full_trace.textContent = formatResponse(req);
+        }
+
+        function formatResponse(req) {
+                try {
+                        return JSON.stringify(req, null, 2); //pretty
+                } catch {
+                        return String(req);
+                }
         }
 
         // Handle register card switching

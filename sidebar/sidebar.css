@@ -72,6 +72,31 @@ body {
     line-height: 1.4;
 }
 
+.details-box {
+    margin-top: 8px;
+    background: #252525;
+    border: 1px solid #444;
+    border-radius: 6px;
+    padding: 6px;
+}
+
+.details-box summary {
+    cursor: pointer;
+    color: #ccc;
+    font-size: 0.9em;
+    user-select: none;
+}
+
+.details-box[open] summary {
+    color: #fff;
+    font-weight: bold;
+}
+
+/* optional: smooth feel */
+.details-box summary:hover {
+    color: #fff;
+}
+
 /* Show panel when checked */
 #tab-decoder:checked ~ #decoder { display: block; }
 #tab-extender:checked ~ #extender { display: block; }
