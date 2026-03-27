@@ -1,4 +1,3 @@
-/* Base styling */
 body {
     font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
     background-color: #1e1e1e;
@@ -7,19 +6,20 @@ body {
     margin: 0;
 }
 
-.text-center { text-align: center; }
+.text-center {
+    text-align: center;
+}
 
-/* Hide radio buttons */
-.tabs-css input[type="radio"] { display: none; }
+.tabs-css input[type="radio"] {
+    display: none;
+}
 
-/* Tab buttons container */
 .tab-buttons {
     display: flex;
-    border-radius: 8px 8px 0 0; /* Rounded top corners for card */
+    border-radius: 8px 8px 0 0;
     overflow: hidden;
 }
 
-/* Tab buttons */
 .tab-btn {
     flex: 1;
     padding: 12px;
@@ -36,7 +36,6 @@ body {
     background: #3a3a3a;
 }
 
-/* Active tab styling */
 #tab-decoder:checked ~ .tab-buttons label[for="tab-decoder"],
 #tab-extender:checked ~ .tab-buttons label[for="tab-extender"] {
     background: #3a3a3a;
@@ -44,19 +43,23 @@ body {
     font-weight: bold;
 }
 
-/* Card panels */
 .tab-content {
     display: none;
     padding: 12px;
     background: #2b2b2b;
-    border-radius: 0 0 8px 8px; /* Rounded bottom corners */
+    border-radius: 0 0 8px 8px;
     box-shadow: 0 2px 6px rgba(0,0,0,0.5);
-    border-top: none; /* removes gap under tab buttons */
     margin-bottom: 15px;
     box-sizing: border-box;
 }
 
-.tab-content textarea {
+#tab-decoder:checked ~ #decoder,
+#tab-extender:checked ~ #extender {
+    display: block;
+}
+
+.tab-content textarea,
+textarea {
     width: 100%;
     min-height: 70px;
     max-height: 250px;
@@ -65,57 +68,13 @@ body {
     border: 1px solid #555;
     background: #1e1e1e;
     color: #dcdcdc;
-    resize: none; /*handled by js code */ 
-    font-family: monospace;
-    margin-bottom: 10px;
-    box-sizing: border-box; /* make sure it stays inside card */
-    line-height: 1.4;
-}
-
-.details-box {
-    margin-top: 8px;
-    background: #252525;
-    border: 1px solid #444;
-    border-radius: 6px;
-    padding: 6px;
-}
-
-.details-box summary {
-    cursor: pointer;
-    color: #ccc;
-    font-size: 0.9em;
-    user-select: none;
-}
-
-.details-box[open] summary {
-    color: #fff;
-    font-weight: bold;
-}
-
-/* optional: smooth feel */
-.details-box summary:hover {
-    color: #fff;
-}
-
-/* Show panel when checked */
-#tab-decoder:checked ~ #decoder { display: block; }
-#tab-extender:checked ~ #extender { display: block; }
-
-/* Textarea and inputs */
-textarea {
-    width: 100%;
-    height: 80px;
-    padding: 8px;
-    border-radius: 6px;
-    border: 1px solid #555;
-    background: #1e1e1e;
-    color: #dcdcdc;
     resize: vertical;
     font-family: monospace;
     margin-bottom: 10px;
+    box-sizing: border-box;
+    line-height: 1.4;
 }
 
-/* Buttons */
 button {
     padding: 6px 14px;
     background: #3a3a3a;
@@ -130,19 +89,17 @@ button:hover {
     background: #505050;
 }
 
-/* Number input */
 input[type="number"] {
     padding: 4px;
-    width: 60px; /* fixed width */
+    width: 60px;
     margin-left: 5px;
     border-radius: 4px;
     border: 1px solid #555;
     background: #1e1e1e;
     color: #dcdcdc;
-    box-sizing: border-box; /* ensure fits inside card */
+    box-sizing: border-box;
 }
 
-/* Preformatted output */
 pre {
     width: 100%;
     padding: 8px;
@@ -154,12 +111,67 @@ pre {
     overflow-x: auto;
     white-space: pre-wrap;
     word-break: break-word;
-    box-sizing: border-box; /* fix overflow */
+    box-sizing: border-box;
     margin-bottom: 10px;
 }
 
-/* Headings */
 h3 {
     margin: 10px 0 6px;
     color: #fff;
+}
+
+.details-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 8px;
+}
+
+.details-box {
+    flex-grow: 1;
+}
+
+.details-box summary {
+    display: inline;
+    cursor: pointer;
+}
+
+.details-box pre {
+    display: block;
+    margin-top: 8px;
+}
+
+#copy-btn {
+    white-space: nowrap;
+    pointer-events: auto;
+}
+
+.details-box summary:hover {
+    color: #fff;
+}
+
+.details-summary {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    user-select: none;
+}
+
+.summary-text {
+    display: inline-flex;
+    align-items: center;
+}
+
+.summary-text::before {
+    content: "▶"; 
+    display: inline-block;
+    margin-right: 6px;
+    transition: transform 0.2s ease;
+    font-size: 0.8em;
+}
+
+.details-box[open] .summary-text::before {
+    transform: rotate(90deg);
 }

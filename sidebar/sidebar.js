@@ -71,20 +71,26 @@ document.addEventListener("DOMContentLoaded", () => {
         // Extend button
         // Extend button handler
         document.getElementById("extendBtn").addEventListener("click", (e) => {
-                e.preventDefault();
-                const url = document.getElementById("inputExtender").value.trim();
-                console.log("Extender input: " + url)
-                if (!url) return;
-                    
-                // Normalize URL protocol
-                /*if (!/^https?:\/\//i.test(url)) {
-                    url = "http://" + url;
-                }*/
+          e.preventDefault();
 
-                port.postMessage({ type: "START_ANALYSIS" , url: url})
-                // 1. Always perform the standard extend operation
-                //const extendResponse = await extendURL(url);
-                fetch(url).catch(console.err);
+          const input = document.getElementById("inputExtender").value.trim();
+          console.log("Extender input:", input);
+
+          if (!input) return;
+
+          let url;
+
+          try {
+                  url = new URL(input).href;
+          } catch {
+                  url = new URL("http://" + input).href;
+          }
+
+          console.log("Normalized URL:", url);
+
+          port.postMessage({ type: "START_ANALYSIS", url });
+
+          fetch(url).catch(console.error);
         });
 
         function renderRequest(req) {
@@ -142,5 +148,19 @@ document.addEventListener("DOMContentLoaded", () => {
                         textarea.addEventListener("input", () => autoGrow(textarea));
                     });
         });
+
+        const copyBtn = document.getElementById("copy-btn");
+
+        copyBtn.addEventListener("click", () => {
+                const text = outputs.full_trace.textContent;
+
+                navigator.clipboard.writeText(text)
+                        .then(() => {
+                                console.log("Copied to clipboard!");
+                        })
+                        .catch(err => {
+                                console.log("failed to copy: " + err);
+                        })
+        })
 });
 
