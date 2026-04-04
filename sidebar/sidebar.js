@@ -59,7 +59,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
         // Connect to background
-        const port = chrome.runtime.connect({ name: "sidebar", number: 2222 });
+        const port = chrome.runtime.connect({ name: "sidebar"});
 
         port.onMessage.addListener((msg) => {
                 if (msg.type === "REQUEST_COMPLETED") {
