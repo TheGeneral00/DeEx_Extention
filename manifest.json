@@ -3,10 +3,10 @@
   "name": "En/Decoder and Extender",
   "version": "0.1",
   "description": "PoC encoder, decoder and URL extender.",
-  "permissions": ["sidePanel", "webRequest"],
+  "permissions": ["sidePanel", "webRequest", "declarativeNetRequest", "declarativeNetRequestWithHostAccess"],
   "host_permissions": ["http://*/*", "https://*/*"],
   "background": {
-    "service_worker": "background.mjs"
+    "service_worker": "background.js"
   },
   "action": {
     "default_title": "Open Decoder Sidebar"

@@ -1,0 +1,20 @@
+[
+  {
+    "id": 1,
+    "priority": 1,
+    "action": {
+      "type": "modifyHeaders",
+      "requestHeaders": [
+        { "header": "referer", "operation": "remove" },
+        { "header": "DeEx-Extension", "operation": "remove" }
+      ]
+    },
+    "condition": {
+      "urlFilter": "*",
+      "resourceTypes": ["xmlhttprequest"],
+      "requestHeaders": [
+        { "header": "DeEx-Extension", "value": "1" }
+      ]
+    }
+  }
+]

@@ -68,8 +68,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 }
         });
 
-        // Extend button
-        // Extend button handler
         document.getElementById("extendBtn").addEventListener("click", (e) => {
           e.preventDefault();
 
@@ -90,7 +88,18 @@ document.addEventListener("DOMContentLoaded", () => {
 
           port.postMessage({ type: "START_ANALYSIS", url });
 
-          fetch(url).catch(console.error);
+                try {
+                        fetch(url, {
+                                headers: {
+                                        "DeEx-Extension": "1",
+                                },
+                                referrer: "",
+                                referrerPolicy: "no-referrer",
+                                method: "HEAD"
+                        })
+                } catch (err) {
+                        console.error(err)
+                }
         });
 
         function renderRequest(req) {
@@ -120,13 +129,13 @@ document.addEventListener("DOMContentLoaded", () => {
                 btn.addEventListener('click', () => {
                     const target = btn.dataset.tab;
 
-                    // Remove active from all buttons and contents
                     tabButtons.forEach(b => b.classList.remove('active'));
                     tabContents.forEach(c => c.classList.remove('active'));
 
                     // Activate clicked tab and corresponding content
                     btn.classList.add('active');
-                    document.getElementById(target).classList.add('active');
+                    document.getElementBy
+                        Id(target).classList.add('active');
                 });
         });
 
@@ -137,16 +146,13 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         // Apply to all textareas
-        document.addEventListener("DOMContentLoaded", () => {
-                    const textareas = document.querySelectorAll("textarea");
+        const textareas = document.querySelectorAll("textarea");
 
-                    textareas.forEach(textarea => {
-                        // Initial sizing
-                        autoGrow(textarea);
-
-                        // Grow on input
-                        textarea.addEventListener("input", () => autoGrow(textarea));
-                    });
+        textareas.forEach(textarea => {
+                // Initial sizing
+                autoGrow(textarea);
+                // Grow on input
+                textarea.addEventListener("input", () => autoGrow(textarea));
         });
 
         const copyBtn = document.getElementById("copy-btn");

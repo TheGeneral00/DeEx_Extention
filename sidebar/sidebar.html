@@ -17,21 +17,21 @@
 
         <!-- Tab buttons (top of card) -->
         <div class="tab-buttons">
-            <label for="tab-decoder" class="tab-btn">Decoder</label>
-            <label for="tab-extender" class="tab-btn">Extender</label>
+                <label for="tab-decoder" class="tab-btn">Decoder</label>
+                <label for="tab-extender" class="tab-btn">Extender</label>
         </div>
 
         <!-- Decoder Card -->
         <div class="tab-content" id="decoder">
-            <textarea id="inputDecoder" placeholder="Paste encoded text here"></textarea>
-            <div class="button">
+                <textarea id="inputDecoder" placeholder="Paste encoded text here"></textarea>
+                <div class="button">
                 <button id="decodeBtn">Decode</button>
-            </div>
-            <h3>Base64</h3><pre id="out_base64"></pre>
-            <h3>URL</h3><pre id="out_url"></pre>
-            <h3>Quoted-Printable</h3><pre id="out_qp"></pre>
-            <h3>Hex</h3><pre id="out_hex"></pre>
-            <h3>HTML Entities</h3><pre id="out_html"></pre>
+                </div>
+                <h3>Base64</h3><pre id="out_base64"></pre>
+                <h3>URL</h3><pre id="out_url"></pre>
+                <h3>Quoted-Printable</h3><pre id="out_qp"></pre>
+                <h3>Hex</h3><pre id="out_hex"></pre>
+                <h3>HTML Entities</h3><pre id="out_html"></pre>
         </div>
 
         <!-- Extender Card -->
@@ -39,6 +39,7 @@
                 <textarea id="inputExtender" placeholder="Paste short URL here"></textarea>
                         <div class="button">
                         <button id="extendBtn">Extend</button>
+                        </div>
                 <h3>Extended URL</h3>
                 <pre id="out_ext"></pre>
 
@@ -51,6 +52,7 @@
                     </summary>
                     <pre id="out_ext_full"></pre>
                 </details>
+                </div>
         </div>
     </div>
     <script src="sidebar.js" defer></script>

@@ -58,8 +58,7 @@ body {
     display: block;
 }
 
-.tab-content textarea,
-textarea {
+.tab-content textarea {
     width: 100%;
     min-height: 70px;
     max-height: 250px;
