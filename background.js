@@ -37,7 +37,7 @@ class WebRequestManager {
     this.handleError = this.handleError.bind(this);
 
     chrome.runtime.onConnect.addListener((port) => {
-      if (port.name === "sidebar") {
+      if (port.name === "sidebar" && port.number === 2222) {
         this.ports.push(port);
 
         port.onMessage.addListener((msg) => {

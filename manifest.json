@@ -13,5 +13,8 @@
   },
   "side_panel": {
     "default_path": "/sidebar/sidebar.html"
+  },
+  "content_security_policy": {
+          "extension_pages": "default_src 'self'"
   }
 }
