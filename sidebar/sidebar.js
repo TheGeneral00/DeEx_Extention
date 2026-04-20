@@ -134,8 +134,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
                     // Activate clicked tab and corresponding content
                     btn.classList.add('active');
-                    document.getElementBy
-                        Id(target).classList.add('active');
+                    document.getElementById(target).classList.add('active');
                 });
         });
 

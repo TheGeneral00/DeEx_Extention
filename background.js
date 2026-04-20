@@ -37,7 +37,15 @@ class WebRequestManager {
     this.handleError = this.handleError.bind(this);
 
     chrome.runtime.onConnect.addListener((port) => {
-      if (port.name === "sidebar") {
+     const sender = port.sender     
+     
+     if(!sender || sender.id !== chrome.runtime.id) {
+        console.warn("Blocked external connection");
+        port.disconnect();
+        return;
+        }
+
+     if (port.name === "sidebar") {
         this.ports.push(port);
 
         port.onMessage.addListener((msg) => {
